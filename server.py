@@ -1,11 +1,13 @@
+# Importing modules 
+
 import threading
 import socket
 
 PORT = 8080
-HOST = socket.gethostbyname(socket.gethostname())
+HOST = socket.gethostbyname(socket.gethostname()) # Gets Local IP address of machine automatically 
 FORMAT = 'utf-8'
 
-server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+server = socket.socket(socket.AF_INET, socket.SOCK_STREAM) # IPv4 Address 
 
 server.bind((HOST, PORT))
 server.listen()
@@ -15,10 +17,17 @@ nicknames = []
 
 
 def broadcast(message):
+    """
+    Function to boadcast message to all the clients connecting to the server
+    """
     for client in clients:
         client.send(message.encode(FORMAT))
 
+
 def handle(client):
+    """
+    Function to handle each client/remove client from list
+    """
     while True:
         try:
             b_message = client.recv(1024).decode(FORMAT)
@@ -33,6 +42,9 @@ def handle(client):
             break
 
 def receive():
+    """
+    Function to start server up and wait for the client to connect. Each client handled by different thread.
+    """
     while True: 
         print(f"Server listening at {HOST}")
         client, addr = server.accept()
@@ -50,6 +62,7 @@ def receive():
         thread_client.start()
 
 
+# Function at startup, starting server
 receive()
 
 
